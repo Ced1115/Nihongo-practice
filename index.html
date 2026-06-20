@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hiragana">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#f7f3ec">
+<title>Hiragana Flashcards</title>
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<h1>ひらがな — Hiragana</h1>
+<div class="streak-badge" id="streakBadge">🔥 0 day streak</div>
+
+<!-- SELECTION -->
+<div class="screen active" id="screenSel">
+  <p class="sel-intro">Choose which characters to practise</p>
+  <div class="mastery-legend">
+    <span><span class="legend-dot"></span> new</span>
+    <span><span class="legend-dot level-1"></span> shaky</span>
+    <span><span class="legend-dot level-2"></span> okay</span>
+    <span><span class="legend-dot level-3"></span> solid</span>
+  </div>
+  <div class="group-wrap" id="groupWrap"></div>
+
+  <div class="mode-picker">
+    <div class="mode-label">Practice mode</div>
+    <div class="mode-options">
+      <button class="mode-btn active" id="modeFlashcard" data-mode="flashcard">Flashcards</button>
+      <button class="mode-btn" id="modeTyping" data-mode="typing">Typing</button>
+    </div>
+  </div>
+
+  <div class="sel-actions">
+    <button id="selAllBtn">Select all</button>
+    <button id="startBtn" disabled>Start →</button>
+  </div>
+  <p class="sel-count" id="selCount">0 selected</p>
+</div>
+
+<!-- FLASHCARD PRACTICE -->
+<div class="screen" id="screenPractice">
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0 / 0</div>
+  </div>
+
+  <div class="card">
+    <div class="romaji" id="romaji">—</div>
+
+    <div class="draw-section" id="drawSection">
+      <div class="draw-label" id="drawLabel">draw it here</div>
+      <div class="draw-canvas-wrap">
+        <canvas id="drawCanvas" width="220" height="220"></canvas>
+        <div id="overlayChar"></div>
+      </div>
+      <div class="draw-actions">
+        <button class="draw-clear-btn" id="clearDrawBtn">Clear</button>
+        <button class="draw-clear-btn" id="compareBtn" disabled>Compare</button>
+      </div>
+    </div>
+
+    <div class="answer-area">
+      <div class="hiragana" id="hiragana"></div>
+      <div class="stroke-wrap" id="strokeWrap">
+        <div id="strokeContainer">
+          <!-- SVG injected here -->
+        </div>
+        <div class="stroke-label">stroke order</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button id="revealBtn">Reveal</button>
+    <button id="nextBtn">Next →</button>
+  </div>
+  <div class="grade-row" id="gradeRow">
+    <button class="grade-btn" id="gradeGood">✓ Got it</button>
+    <button class="grade-btn" id="gradeBad">✗ Missed</button>
+  </div>
+  <div class="score-row">
+    <span><span class="dot dot-seen"></span> <span id="seenCount">0</span> seen</span>
+    <span><span class="dot dot-right"></span> <span id="rightCount">0</span> correct</span>
+    <span><span class="dot dot-wrong"></span> <span id="wrongCount">0</span> missed</span>
+  </div>
+  <button id="backBtn">← Change selection</button>
+</div>
+
+<!-- TYPING PRACTICE -->
+<div class="screen" id="screenTyping">
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="typeProgressFill"></div></div>
+    <div class="progress-label" id="typeProgressLabel">0 / 0</div>
+  </div>
+
+  <div class="card">
+    <div class="type-hiragana" id="typeHiragana">—</div>
+    <div class="type-word-hint" id="typeWordHint"></div>
+
+    <input
+      type="text"
+      id="typeInput"
+      class="type-input"
+      autocomplete="off"
+      autocapitalize="off"
+      autocorrect="off"
+      spellcheck="false"
+      placeholder="type the romaji…"
+    />
+
+    <div class="type-feedback" id="typeFeedback"></div>
+    <div class="type-word-info" id="typeWordInfo">
+      <div class="type-word-kanji" id="typeWordKanji"></div>
+      <div class="type-word-meaning" id="typeWordMeaning"></div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button id="typeSubmitBtn">Check</button>
+    <button id="typeNextBtn" disabled>Next →</button>
+  </div>
+
+  <div class="score-row">
+    <span><span class="dot dot-seen"></span> <span id="typeSeenCount">0</span> seen</span>
+    <span><span class="dot dot-right"></span> <span id="typeRightCount">0</span> correct</span>
+    <span><span class="dot dot-wrong"></span> <span id="typeWrongCount">0</span> missed</span>
+  </div>
+  <button id="typeBackBtn">← Change selection</button>
+</div>
+
+<!--
+  Load order matters: data/storage/strokes/drawpad are read by selection.js,
+  flashcards.js, and typing.js, so they must load first.
+-->
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/strokes.js"></script>
+<script src="js/drawpad.js"></script>
+<script src="js/selection.js"></script>
+<script src="js/flashcards.js"></script>
+<script src="js/typing.js"></script>
+
+<script>
+  // Register service worker for offline support (PWA)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>
