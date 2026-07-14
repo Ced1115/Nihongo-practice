@@ -128,7 +128,8 @@ function loadTypeCard() {
   currentItem = item;
   currentChar = item.display;
 
-  document.getElementById('vocabJp').textContent = item.display;
+  // Show meaning as the prompt — user must recall both the word and its kana reading
+  document.getElementById('vocabJp').textContent = item.meaning;
   const input = document.getElementById('readingInput');
   input.value = '';
   input.disabled = false;
@@ -144,13 +145,15 @@ function loadTypeCard() {
 
 function checkReading() {
   const input = document.getElementById('readingInput');
-  const guess = input.value.trim().toLowerCase();
+  const guess = input.value.trim();
   if (guess === '') return;
 
   seen++;
   document.getElementById('seenCount').textContent = seen;
 
-  const correct = guess === currentItem.romaji;
+  // Accept kana reading (primary) or romaji (fallback)
+  const kana = currentItem.reading || '';
+  const correct = guess === kana || guess.toLowerCase() === currentItem.romaji;
   const feedback = document.getElementById('readingFeedback');
   input.disabled = true;
   document.getElementById('checkBtn').disabled = true;
@@ -162,12 +165,12 @@ function checkReading() {
     feedback.classList.add('correct');
   } else {
     input.classList.add('incorrect');
-    feedback.textContent = `✗ It was "${currentItem.romaji}"`;
+    feedback.textContent = `✗ It was "${kana}" (${currentItem.romaji})`;
     feedback.classList.add('incorrect');
   }
 
-  document.getElementById('answerKana').textContent = currentItem.reading || '';
-  document.getElementById('answerMeaning').textContent = currentItem.meaning || '';
+  document.getElementById('answerKana').textContent = `${currentItem.display}  ·  ${kana}`;
+  document.getElementById('answerMeaning').textContent = currentItem.romaji || '';
   document.getElementById('readingAnswer').classList.add('visible');
 
   const item = queue.shift();

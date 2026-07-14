@@ -207,8 +207,12 @@ h1 {
 .reading-row { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.03em; }
 .reading-label { font-weight: 600; color: var(--ink); margin-right: 4px; }
 
-/* Vocab reading-practice card */
-.vocab-jp-display { font-family: 'Noto Serif JP', serif; font-size: 2.6rem; color: var(--ink); line-height: 1.3; margin-bottom: 24px; text-align: center; }
+/* Vocab reading-practice prompt (shows English meaning) */
+.vocab-jp-display {
+  font-family: 'Inter', sans-serif; font-size: 1.3rem; font-weight: 600;
+  color: var(--ink); line-height: 1.4; margin-bottom: 24px; text-align: center;
+  letter-spacing: 0.01em;
+}
 
 /* Generic text input (typing/reading checks) */
 .type-input {
@@ -310,7 +314,6 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   .group-grid { grid-template-columns: repeat(5, 1fr); }
   .type-hiragana { font-size: 3.6rem; }
   .type-input { font-size: 1rem; padding: 12px 14px; }
-  .vocab-jp-display { font-size: 2.1rem; }
   .vocab-meaning { max-width: 90px; font-size: 0.7rem; }
   .vocab-jp { font-size: 0.95rem; }
   .quiz-jp-prompt { font-size: 1.8rem; }
